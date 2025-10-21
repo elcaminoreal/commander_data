@@ -1,4 +1,6 @@
 import argparse
+import logging
+import logging.handlers
 import unittest
 from hamcrest import (
     assert_that,
@@ -51,3 +53,38 @@ class TestRunner(unittest.TestCase):
                 ),
             ),
         )
+
+
+class TestRunnerLogging(unittest.TestCase):
+    def setUp(self):
+        self.log_records = []
+        self.handler = logging.handlers.MemoryHandler(capacity=1000)
+        self.handler.setLevel(logging.INFO)
+        logger = logging.getLogger("commander_data.run")
+        logger.addHandler(self.handler)
+        logger.setLevel(logging.INFO)
+
+    def tearDown(self):
+        logger = logging.getLogger("commander_data.run")
+        logger.removeHandler(self.handler)
+
+    def test_safe_run_logs_execution(self):
+        runner = run.Runner()
+        runner.safe_run(COMMAND.echo("test"))
+        self.handler.flush()
+        logs = [record.getMessage() for record in self.handler.buffer]
+        assert_that(logs, has_item(starts_with("Running ['echo', 'test']")))
+
+    def test_dry_run_logs_skip(self):
+        runner = run.Runner()
+        runner.run(COMMAND.echo("test"))
+        self.handler.flush()
+        logs = [record.getMessage() for record in self.handler.buffer]
+        assert_that(logs, has_item(starts_with("Dry run, not running ['echo', 'test']")))
+
+    def test_no_dry_run_logs_execution(self):
+        runner = run.Runner(no_dry_run=True)
+        runner.run(COMMAND.echo("test"))
+        self.handler.flush()
+        logs = [record.getMessage() for record in self.handler.buffer]
+        assert_that(logs, has_item(starts_with("Running ['echo', 'test']")))
