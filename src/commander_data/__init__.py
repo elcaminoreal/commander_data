@@ -1,4 +1,5 @@
-"""
+"""Build command lines for subprocess.
+
 Use
 :code:`COMMAND`
 to create commandlines
@@ -27,6 +28,7 @@ gives a sub-command that adds more items to the command:
 
 Those are composable in any order.
 """
+
 import importlib.metadata
 from .api import COMMAND, run_all
 

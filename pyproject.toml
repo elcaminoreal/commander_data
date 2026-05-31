@@ -15,7 +15,7 @@ authors = [{name = "Moshe Zadka", email = "moshez@zadka.club"}]
 [project.optional-dependencies]
 tests = ["virtue", "pyhamcrest", "coverage"]
 mypy = ["mypy"]
-lint = ["flake8", "black"]
+lint = ["flake8", "black", "stolid", "placard", "pydoclint"]
 docs = ["sphinx"]
 
 [project.license]
@@ -47,3 +47,6 @@ log = "git-log-head"
 log_command = "git log -n 1 --date=iso"
 is_main_var = "GITHUB_REF"
 is_main_match = ".*/trunk$"
+
+[project.entry-points.gather]
+placeholder = "commander_data"
