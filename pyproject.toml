@@ -11,6 +11,7 @@ dynamic = ["version"]
 description = "Prepare data for commands"
 readme = "README.rst"
 authors = [{name = "Moshe Zadka", email = "moshez@zadka.club"}]
+dependencies = ["attrs"]
 
 [project.optional-dependencies]
 tests = ["virtue", "pyhamcrest", "coverage"]
